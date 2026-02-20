@@ -5,8 +5,8 @@
 ## Installation
 
 ```bash
-# via Homebrew (once tap is set up)
-brew install rotty3000/tap/durl
+# via Homebrew
+brew install rotty3000/durl/durl
 
 # from source
 cargo install --path .

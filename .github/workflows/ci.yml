@@ -40,6 +40,48 @@ jobs:
       with:
         files: release-assets/*
         generate_release_notes: true
+    - env:
+        HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      name: Update Homebrew Formula
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+        VERSION=${TAG#v}
+
+        # Source (macOS)
+        SOURCE_URL="https://github.com/rotty3000/durl/archive/refs/tags/${TAG}.tar.gz"
+        curl -L -o durl-source.tar.gz "$SOURCE_URL"
+        SOURCE_SHA=$(sha256sum durl-source.tar.gz | awk '{print $1}')
+
+        # Linux AMD64
+        AMD64_URL="https://github.com/rotty3000/durl/releases/download/${TAG}/durl-linux-amd64"
+        AMD64_SHA=$(sha256sum dist/x86_64-unknown-linux-gnu/durl | awk '{print $1}')
+
+        # Linux ARM64
+        ARM64_URL="https://github.com/rotty3000/durl/releases/download/${TAG}/durl-linux-arm64"
+        ARM64_SHA=$(sha256sum dist/aarch64-unknown-linux-gnu/durl | awk '{print $1}')
+
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+        git clone https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/rotty3000/homebrew-durl.git homebrew-tap
+        cd homebrew-tap
+
+        # Update Version
+        sed -i "s|version \".*\"|version \"$VERSION\"|" Formula/durl.rb
+
+        # Update Linux AMD64 (first occurrence of url/sha256 inside on_linux)
+        # Using subtle perl-style matching to handle the separate blocks
+        perl -i -0777 -pe "s|(if Hardware::CPU.intel\?.*?sha256 \").*?(\".*?url \").*?(\")|\${1}$AMD64_SHA\${2}$AMD64_URL\${3}|s" Formula/durl.rb
+
+        # Update Linux ARM64
+        perl -i -0777 -pe "s|(elsif Hardware::CPU.arm\?.*?sha256 \").*?(\".*?url \").*?(\")|\${1}$ARM64_SHA\${2}$ARM64_URL\${3}|s" Formula/durl.rb
+
+        # Update macOS/Source
+        perl -i -0777 -pe "s|(on_macos.*?sha256 \").*?(\".*?url \").*?(\")|\${1}$SOURCE_SHA\${2}$SOURCE_URL\${3}|s" Formula/durl.rb
+
+        git add Formula/durl.rb
+        git commit -m "Update durl to $TAG"
+        git push
 
   test:
     name: Test
