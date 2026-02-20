@@ -1,0 +1,52 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+env:
+  LC_ALL: en_US.UTF-8
+  PUBLISH: ${{ (github.repository == 'rotty3000/durl') && startsWith(github.ref, 'refs/tags/') && (github.event_name != 'pull_request') }}
+
+jobs:
+  release:
+    if: ${{ env.PUBLISH == 'true' }}
+    name: Release
+    needs: test
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+    - name: Install Cross
+      run: cargo install cross --git https://github.com/cross-rs/cross
+    - name: Install UPX
+      run: sudo apt-get update && sudo apt-get install -y upx-ucl
+    - name: Build and Compress
+      run: make compress
+    - name: Prepare Release Assets
+      run: |
+        mkdir -p release-assets
+        cp dist/x86_64-unknown-linux-gnu/durl release-assets/durl-linux-amd64
+        cp dist/aarch64-unknown-linux-gnu/durl release-assets/durl-linux-arm64
+        cp dist/x86_64-pc-windows-gnu/durl.exe release-assets/durl-windows-amd64.exe
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: release-assets/*
+        generate_release_notes: true
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+    - name: Run tests
+      run: cargo test
