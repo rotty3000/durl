@@ -1,3 +1,17 @@
+# Copyright 2026 Raymond Auge <rayauge@doublebite.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 BINARY_NAME = durl
 OUT_DIR = dist
 
@@ -11,7 +25,7 @@ WINDOWS_AMD64 = x86_64-pc-windows-gnu
 
 TARGETS = $(LINUX_AMD64) $(LINUX_ARM64) $(WINDOWS_AMD64)
 
-.PHONY: all build clean compress setup test $(TARGETS)
+.PHONY: all build clean compress copyright lint setup test $(TARGETS)
 
 all: build
 
@@ -20,6 +34,17 @@ build: $(TARGETS)
 compress: build
 	@echo "Compressing binaries with UPX..."
 	@find $(OUT_DIR) -type f -name "$(BINARY_NAME)*" -exec upx --best {} +
+
+copyright:
+	@echo "Updating copyright years..."
+	@find . -type f \( -name "*.rs" -o -name "Makefile" -o -name "*.yml" -o -name "*.toml" -o -name "*.rb" \) \
+		-not -path "./target/*" \
+		-not -path "./.git/*" \
+		-exec sed -i "s/Copyright [0-9]\{4\}/Copyright $(shell date +%Y)/g" {} +
+
+lint: copyright
+	cargo fmt --all -- --check
+	cargo clippy --all-targets --all-features -- -D warnings
 
 test:
 	cargo test
@@ -48,3 +73,4 @@ clean:
 
 setup:
 	rustup target add $(TARGETS)
+	rustup component add clippy rustfmt

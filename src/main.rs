@@ -1,3 +1,17 @@
+// Copyright 2026 Raymond Auge <rayauge@doublebite.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 use anyhow::{anyhow, Context, Result};
 use clap::Parser;
 use std::path::Path;
@@ -5,12 +19,37 @@ use url::Url;
 
 #[derive(Parser)]
 #[command(
-    author,
-    version,
     about = "durl is a simple command-line tool for parsing and formatting URLs",
-    override_usage = "durl +<format> <url>",
+    after_help = r#"Format masks:
+
+  e.g. given: https://foo:bar@www.example.com:8443/path/to/file.txt?query=value#section1
+
+  %s  scheme                  (gives: https)
+  %S  scheme with delimiter   (gives: https://)
+  %a  auth                    (gives: foo:bar)
+  %A  auth with delimiter     (gives: foo:bar@)
+  %u  username                (gives: foo)
+  %U  password                (gives: bar)
+  %H  host                    (gives: www.example.com:8443)
+  %D  domain                  (gives: www.example.com)
+  %d  subdomain               (gives: www)
+  %P  port                    (gives: 8443)
+  %p  path                    (gives: /path/to/file.txt)
+  %b  base                    (gives: file.txt)
+  %q  query                   (gives: query=value)
+  %Q  query with delimiter    (gives: ?query=value)
+  %f  fragment                (gives: section1)
+  %F  fragment with delimiter (gives: #section1)
+
+Written by Raymond Auge, © 2026. All rights reserved.
+
+Source/Issues: https://github.com/rotty3000/durl
+
+"#,
     arg_required_else_help = true,
-    after_help = "Format masks:\n\n  e.g. given: https://foo:bar@www.example.com:8443/path/to/file.txt?query=value#section1\n\n  %s  scheme                  (gives: https)\n  %S  scheme with delimiter   (gives: https://)\n  %a  auth                    (gives: foo:bar)\n  %A  auth with delimiter     (gives: foo:bar@)\n  %u  username                (gives: foo)\n  %U  password                (gives: bar)\n  %H  host                    (gives: www.example.com:8443)\n  %D  domain                  (gives: www.example.com)\n  %d  subdomain               (gives: www)\n  %P  port                    (gives: 8443)\n  %p  path                    (gives: /path/to/file.txt)\n  %b  base                    (gives: file.txt)\n  %q  query                   (gives: query=value)\n  %Q  query with delimiter    (gives: ?query=value)\n  %f  fragment                (gives: section1)\n  %F  fragment with delimiter (gives: #section1)\n"
+    author,
+    override_usage = "durl +<format> <url>",
+    version
 )]
 struct Args {
     #[arg(help = "Format string starting with + (e.g., +%S%H%p)")]
@@ -34,8 +73,8 @@ fn main() -> Result<()> {
         args.url.clone()
     };
 
-    let parsed_url = Url::parse(&url_to_parse)
-        .with_context(|| format!("Failed to parse URL: {}", args.url))?;
+    let parsed_url =
+        Url::parse(&url_to_parse).with_context(|| format!("Failed to parse URL: {}", args.url))?;
 
     println!("{}", parse_format(format, &parsed_url));
 
@@ -117,8 +156,8 @@ fn parse_format(format: &str, u: &Url) -> String {
                         }
                     }
                     'b' => {
-                        if let Some(segments) = u.path_segments() {
-                            if let Some(last) = segments.last() {
+                        if let Some(mut segments) = u.path_segments() {
+                            if let Some(last) = segments.next_back() {
                                 if !last.is_empty() {
                                     output.push_str(last);
                                 } else {
@@ -349,7 +388,8 @@ mod tests {
             } else {
                 case.url.to_string()
             };
-            let u = Url::parse(&url_to_parse).expect(&format!("failed to parse url in test: {}", case.name));
+            let u = Url::parse(&url_to_parse)
+                .unwrap_or_else(|_| panic!("failed to parse url in test: {}", case.name));
             let got = parse_format(case.format, &u);
             assert_eq!(got, case.want, "failed test: {}", case.name);
         }

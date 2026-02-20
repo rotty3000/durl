@@ -1,6 +1,43 @@
 # durl
 
-`durl` is a simple command-line tool for parsing and formatting URLs, implemented in Rust as a drop-in replacement for `gurl`.
+`durl` is a simple command-line tool for parsing and formatting URLs, implemented in Rust, inspired by GNU Coreutils `date`.
+
+## Usage
+
+```bash
+durl is a simple command-line tool for parsing and formatting URLs
+
+Usage: durl +<format> <url>
+
+Arguments:
+  <FORMAT>  Format string starting with + (e.g., +%S%H%p)
+  <URL>     The URL to parse
+
+Options:
+  -h, --help     Print help (this message)
+  -V, --version  Print version
+
+Format masks:
+
+  e.g. given: https://foo:bar@www.example.com:8443/path/to/file.txt?query=value#section1
+
+  %s  scheme                  (gives: https)
+  %S  scheme with delimiter   (gives: https://)
+  %a  auth                    (gives: foo:bar)
+  %A  auth with delimiter     (gives: foo:bar@)
+  %u  username                (gives: foo)
+  %U  password                (gives: bar)
+  %H  host                    (gives: www.example.com:8443)
+  %D  domain                  (gives: www.example.com)
+  %d  subdomain               (gives: www)
+  %P  port                    (gives: 8443)
+  %p  path                    (gives: /path/to/file.txt)
+  %b  base                    (gives: file.txt)
+  %q  query                   (gives: query=value)
+  %Q  query with delimiter    (gives: ?query=value)
+  %f  fragment                (gives: section1)
+  %F  fragment with delimiter (gives: #section1)
+```
 
 ## Installation
 
