@@ -41,16 +41,29 @@ Format masks:
 
 ## Installation
 
-```bash
-# via Homebrew
-brew install rotty3000/durl/durl
+### via Homebrew (macOS/Linux)
 
-# from source
+```bash
+brew install rotty3000/durl/durl
+```
+
+### via Shell Script (Linux)
+
+You can use the following one-liner to download and install the latest `durl` binary. This script supports multiple architectures (amd64, arm64) and will check if an update is available if `durl` is already installed.
+
+```bash
+curl -sSL https://raw.githubusercontent.com/rotty3000/durl/main/scripts/install.sh | bash
+```
+
+### from Source
+
+```bash
 cargo install --path .
 ```
 
-Or, see [releases](https://github.com/rotty3000/durl/releases) for pre-built binaries you can download manually.
+### from Releases
 
+See [releases](https://github.com/rotty3000/durl/releases) for pre-built binaries you can download manually.
 
 ## Building
 
