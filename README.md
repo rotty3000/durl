@@ -49,6 +49,9 @@ brew install rotty3000/durl/durl
 cargo install --path .
 ```
 
+Or, see [releases](https://github.com/rotty3000/durl/releases) for pre-built binaries you can download manually.
+
+
 ## Building
 
 Install `cross` to assist with cross compilation:
@@ -79,35 +82,4 @@ To run the test suite:
 make test
 ```
 
-The binaries will be located in the `dist/` directory.
-
-## Usage
-
-Usage: `durl +<format> <url>`
-
-Example:
-
-```bash
-durl +%S%H%p https://google.com/search?q=rust
-```
-
-### Format Specifiers
-
-| Specifier | Description | Example Output |
-| :--- | :--- | :--- |
-| `%s` | scheme | `https` |
-| `%S` | scheme with delimiter | `https://` |
-| `%a` | auth | `foo:bar` |
-| `%A` | auth with delimiter | `foo:bar@` |
-| `%u` | username | `foo` |
-| `%U` | password | `bar` |
-| `%H` | host (with port) | `www.example.com:8443` |
-| `%D` | domain (hostname) | `www.example.com` |
-| `%d` | subdomain | `www` |
-| `%P` | port | `8443` |
-| `%p` | path | `/path/to/file.txt` |
-| `%b` | base (filename) | `file.txt` |
-| `%q` | query | `query=value` |
-| `%Q` | query with delimiter | `?query=value` |
-| `%f` | fragment | `section1` |
-| `%F` | fragment with delimiter | `#section1` |
+The binaries will be located in the `dist/` directory. 
