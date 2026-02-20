@@ -8,6 +8,22 @@
 cargo install --path .
 ```
 
+## Building
+
+To build for all supported platforms (Linux, macOS, Windows on amd64/arm64):
+
+```bash
+make build
+```
+
+To run the test suite:
+
+```bash
+make test
+```
+
+The binaries will be located in the `dist/` directory.
+
 ## Usage
 
 Usage: `durl +<format> <url>`
