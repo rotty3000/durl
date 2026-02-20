@@ -1,15 +1,26 @@
 name: CI/CD
 
 on:
-  pull_request:
-    branches: [main]
   push:
-    branches: [main]
-    tags: ['v*']
+    branches-ignore:
+    - "dependabot/**"
+    paths:
+    - "**"
+    - "!docs/**"
+    tags:
+    - "v*"
+  pull_request:
+    paths:
+    - "**"
+    - "!docs/**"
 
 env:
   LC_ALL: en_US.UTF-8
   PUBLISH: ${{ (github.repository == 'rotty3000/durl') && startsWith(github.ref, 'refs/tags/') && (github.event_name != 'pull_request') }}
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   release:
