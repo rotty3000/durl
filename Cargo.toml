@@ -9,3 +9,10 @@ edition = "2021"
 anyhow = "1.0.101"
 clap = { version = "4.5.60", features = ["derive"] }
 url = "2.5"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+panic = "abort"
+strip = true

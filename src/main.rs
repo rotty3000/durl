@@ -4,7 +4,14 @@ use std::path::Path;
 use url::Url;
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
+#[command(
+    author,
+    version,
+    about = "durl is a simple command-line tool for parsing and formatting URLs",
+    override_usage = "durl +<format> <url>",
+    arg_required_else_help = true,
+    after_help = "Format masks:\n\n  e.g. given: https://foo:bar@www.example.com:8443/path/to/file.txt?query=value#section1\n\n  %s  scheme                  (gives: https)\n  %S  scheme with delimiter   (gives: https://)\n  %a  auth                    (gives: foo:bar)\n  %A  auth with delimiter     (gives: foo:bar@)\n  %u  username                (gives: foo)\n  %U  password                (gives: bar)\n  %H  host                    (gives: www.example.com:8443)\n  %D  domain                  (gives: www.example.com)\n  %d  subdomain               (gives: www)\n  %P  port                    (gives: 8443)\n  %p  path                    (gives: /path/to/file.txt)\n  %b  base                    (gives: file.txt)\n  %q  query                   (gives: query=value)\n  %Q  query with delimiter    (gives: ?query=value)\n  %f  fragment                (gives: section1)\n  %F  fragment with delimiter (gives: #section1)\n"
+)]
 struct Args {
     #[arg(help = "Format string starting with + (e.g., +%S%H%p)")]
     format: String,

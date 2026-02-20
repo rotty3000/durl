@@ -10,11 +10,27 @@ cargo install --path .
 
 ## Building
 
-To build for all supported platforms (Linux, macOS, Windows on amd64/arm64):
+Install `cross` to assist with cross compilation:
+
+```bash
+cargo install cross --git https://github.com/cross-rs/cross
+```
+
+To build for all supported platforms (Linux on amd64/arm64 and Windows on amd64):
 
 ```bash
 make build
 ```
+
+To compress the produced binaries using UPX:
+
+```bash
+make compress
+```
+
+**Note:**
+- Cross-compilation uses `cross`, which requires Docker/Podman.
+- **Clean builds:** It is highly recommended to run `make clean` before switching between native `cargo` builds and `cross` builds to avoid artifact conflicts.
 
 To run the test suite:
 
