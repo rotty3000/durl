@@ -37,6 +37,11 @@ jobs:
       run: cargo install cross --git https://github.com/cross-rs/cross
     - name: Install UPX
       run: sudo apt-get update && sudo apt-get install -y upx-ucl
+    - name: Update Cargo.toml version
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+        VERSION=${TAG#v}
+        sed -i "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
     - name: Build and Compress
       run: make compress
     - name: Prepare Release Assets
