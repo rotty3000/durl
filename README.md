@@ -20,7 +20,7 @@ Install `cross` to assist with cross compilation:
 cargo install cross --git https://github.com/cross-rs/cross
 ```
 
-To build for all supported platforms (Linux on amd64/arm64 and Windows on amd64):
+To build static binaries for all supported platforms (Linux on musl amd64/arm64 and Windows on amd64):
 
 ```bash
 make build

@@ -47,8 +47,8 @@ jobs:
     - name: Prepare Release Assets
       run: |
         mkdir -p release-assets
-        cp dist/x86_64-unknown-linux-gnu/durl release-assets/durl-linux-amd64
-        cp dist/aarch64-unknown-linux-gnu/durl release-assets/durl-linux-arm64
+        cp dist/x86_64-unknown-linux-musl/durl release-assets/durl-linux-amd64
+        cp dist/aarch64-unknown-linux-musl/durl release-assets/durl-linux-arm64
         cp dist/x86_64-pc-windows-gnu/durl.exe release-assets/durl-windows-amd64.exe
     - name: Create Release
       uses: softprops/action-gh-release@v2
@@ -69,11 +69,11 @@ jobs:
 
         # Linux AMD64
         AMD64_URL="https://github.com/rotty3000/durl/releases/download/${TAG}/durl-linux-amd64"
-        AMD64_SHA=$(sha256sum dist/x86_64-unknown-linux-gnu/durl | awk '{print $1}')
+        AMD64_SHA=$(sha256sum dist/x86_64-unknown-linux-musl/durl | awk '{print $1}')
 
         # Linux ARM64
         ARM64_URL="https://github.com/rotty3000/durl/releases/download/${TAG}/durl-linux-arm64"
-        ARM64_SHA=$(sha256sum dist/aarch64-unknown-linux-gnu/durl | awk '{print $1}')
+        ARM64_SHA=$(sha256sum dist/aarch64-unknown-linux-musl/durl | awk '{print $1}')
 
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"

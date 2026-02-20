@@ -2,8 +2,8 @@ BINARY_NAME = durl
 OUT_DIR = dist
 
 # Targets
-LINUX_AMD64   = x86_64-unknown-linux-gnu
-LINUX_ARM64   = aarch64-unknown-linux-gnu
+LINUX_AMD64   = x86_64-unknown-linux-musl
+LINUX_ARM64   = aarch64-unknown-linux-musl
 # MACOS_AMD64   = x86_64-apple-darwin
 # MACOS_ARM64   = aarch64-apple-darwin
 WINDOWS_AMD64 = x86_64-pc-windows-gnu
