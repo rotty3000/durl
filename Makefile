@@ -48,7 +48,7 @@ lint: copyright
 
 lint-fix: copyright
 	cargo fmt --all
-	cargo clippy --all-targets --all-features --fix --allow-dirty --allow-staged
+	cargo clippy --all-targets --all-features --fix --allow-dirty --allow-staged -- -D warnings
 
 test:
 	cargo test

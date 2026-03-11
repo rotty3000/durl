@@ -157,18 +157,19 @@ fn parse_format(format: &str, u: &Url) -> String {
                     }
                     'b' => {
                         if let Some(mut segments) = u.path_segments()
-                            && let Some(last) = segments.next_back() {
-                                if !last.is_empty() {
-                                    output.push_str(last);
-                                } else {
-                                    let path = u.path();
-                                    let base = Path::new(path)
-                                        .file_name()
-                                        .and_then(|s| s.to_str())
-                                        .unwrap_or("");
-                                    output.push_str(base);
-                                }
+                            && let Some(last) = segments.next_back()
+                        {
+                            if !last.is_empty() {
+                                output.push_str(last);
+                            } else {
+                                let path = u.path();
+                                let base = Path::new(path)
+                                    .file_name()
+                                    .and_then(|s| s.to_str())
+                                    .unwrap_or("");
+                                output.push_str(base);
                             }
+                        }
                     }
                     'd' => {
                         if let Some(host) = u.host_str() {
