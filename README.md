@@ -44,7 +44,7 @@ Format masks:
 ### via Homebrew (macOS/Linux)
 
 ```bash
-brew install rotty3000/durl/durl
+brew install rotty3000/tap/durl
 ```
 
 ### via Shell Script (Linux)
