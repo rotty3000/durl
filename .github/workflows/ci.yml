@@ -92,7 +92,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-        git clone https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/rotty3000/homebrew-durl.git homebrew-tap
+        git clone https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/rotty3000/homebrew-tap.git homebrew-tap
         cd homebrew-tap
 
         # Update Version
