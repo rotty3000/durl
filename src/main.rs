@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use clap::Parser;
 use std::path::Path;
 use url::Url;
@@ -156,8 +156,8 @@ fn parse_format(format: &str, u: &Url) -> String {
                         }
                     }
                     'b' => {
-                        if let Some(mut segments) = u.path_segments() {
-                            if let Some(last) = segments.next_back() {
+                        if let Some(mut segments) = u.path_segments()
+                            && let Some(last) = segments.next_back() {
                                 if !last.is_empty() {
                                     output.push_str(last);
                                 } else {
@@ -169,7 +169,6 @@ fn parse_format(format: &str, u: &Url) -> String {
                                     output.push_str(base);
                                 }
                             }
-                        }
                     }
                     'd' => {
                         if let Some(host) = u.host_str() {
